@@ -2,6 +2,13 @@
 pragma solidity ^0.7.4;
 
 library LibBasePollStorage {
+
+  bytes32 constant BASE_STORAGE = keccak256("diamond.contract.assetpool.basepoll");
+
+  struct BaseStorage {
+    uint256 pollCounter;
+  }
+
   struct BasePollStorage {
     uint256 id;
     uint256 startTime;
@@ -21,7 +28,14 @@ library LibBasePollStorage {
   function getPosition(uint256 _id) internal pure returns (bytes32) {
         return
             keccak256(abi.encode("diamond.contract.assetpool.basepoll", _id));
+  }
+
+  function baseStorage() internal pure returns (BaseStorage storage bs) {
+    bytes32 position = BASE_STORAGE;
+    assembly {
+      bs.slot := position
     }
+  }
 
   function basePollStorage(bytes32 _pos) internal pure returns (BasePollStorage storage bs) {
     assembly {
